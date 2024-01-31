@@ -28,6 +28,8 @@ import (
 	"os"
 	"reflect"
 	"unsafe"
+    "runtime"
+    "runtime/debug"
 
 	"github.com/corazawaf/coraza/v3"
 
@@ -36,6 +38,16 @@ import (
 
 var wafMap = make(map[uint64]coraza.WAF)
 var txMap = make(map[uint64]types.Transaction)
+
+//export coraza_SetGCPercent
+func coraza_SetGCPercent (percent C.int) C.int {
+    return C.int(debug.SetGCPercent (int (percent)))
+}
+
+//export coraza_run_GC
+func coraza_run_GC () {
+    runtime.GC ()
+}
 
 /**
  * Creates a new  WAF instance
